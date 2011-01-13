@@ -1,6 +1,8 @@
 class Zone < ActiveRecord::Base
   belongs_to :zone_type
+  has_many   :resource_records, :dependent => :destroy
   
+  # Attributes that are required
   validates :name,      :presence => true,
                         :uniqueness => true
   validates :mname,     :presence => true
@@ -42,9 +44,11 @@ class Zone < ActiveRecord::Base
 
   # Clear empty attributes before saving
   before_save :clear_empty_attrs
+
   
   private
   
+  # Set some empty attributes to nil
   def clear_empty_attrs
     if self.master
       self.master = nil if self.master.empty?

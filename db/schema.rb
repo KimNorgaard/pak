@@ -10,7 +10,34 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110111135646) do
+ActiveRecord::Schema.define(:version => 20110113173330) do
+
+  create_table "resource_record_types", :force => true do |t|
+    t.string   "name",                              :null => false
+    t.string   "description"
+    t.boolean  "needs_priority", :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "resource_record_types", ["name"], :name => "index_resource_record_types_on_name"
+
+  create_table "resource_records", :force => true do |t|
+    t.string   "name",                                      :null => false
+    t.string   "rdata",                                     :null => false
+    t.integer  "ttl"
+    t.integer  "priority"
+    t.boolean  "active",                  :default => true, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "zone_id",                                   :null => false
+    t.integer  "resource_record_type_id",                   :null => false
+  end
+
+  add_index "resource_records", ["name", "resource_record_type_id"], :name => "index_resource_records_on_name_and_resource_record_type_id"
+  add_index "resource_records", ["name"], :name => "index_resource_records_on_name"
+  add_index "resource_records", ["resource_record_type_id"], :name => "index_resource_records_on_resource_record_type_id"
+  add_index "resource_records", ["zone_id"], :name => "index_resource_records_on_zone_id"
 
   create_table "zone_types", :force => true do |t|
     t.string   "name",       :null => false

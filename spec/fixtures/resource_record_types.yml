@@ -1,0 +1,7 @@
+a:
+  name: "A"
+ns:
+  name: "NS"
+mx:
+  name: "MX"
+  needs_priority: true
