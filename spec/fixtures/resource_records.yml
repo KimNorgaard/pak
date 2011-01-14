@@ -1,0 +1,6 @@
+www.test.com:
+    name: "www.test.com"
+    rdata: "127.0.0.1"
+    resource_record_type: a
+    zone: test.com
+    ttl: 3600

@@ -28,16 +28,20 @@ class Zone < ActiveRecord::Base
     :allow_blank => true
   
   # RFC 1035, 3.3.13: SOA refresh, retry, expire, minimum must be 32 bit signed integers
-  validates_numericality_of :refresh, :retry, :expire,
-    :greater_than_or_equal_to => -(2**31),
+  #                   but we cheat, since negative timings does not make sense
+  validates :refresh, :retry, :expire, :numericality => {
+    :greater_than_or_equal_to => 0,
     :less_than => 2**31
+  }
   
   # RFC 2308, 5: SOA minimum should be between one and three hours
-  validates_numericality_of :minimum,
+  validates :minimum, :numericality => {
     :greater_than_or_equal_to => 3600,
     :less_than_or_equal_to    => 10800
+  }
 
   # Custom zone validation
+  # RFC 952, RFC 1123, RFC 2181
   validates :name,  :domainname => true, :allow_blank => true
   validates :mname, :hostname => { :allow_underscore => true }, :allow_blank => true
   validates :rname, :fqdn => true, :allow_blank => true

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Zone, "that is new" do
-  include ZoneHelperMethods
+  include SpecHelperMethods
   fixtures :zone_types
 
   before(:each) do
@@ -109,25 +109,37 @@ describe Zone, "that is new" do
     zone.mname = '_ns1.test.com'
     zone.should be_valid
   end  
+
+  pending "should not be valid if mname is the zone name" do
+  end
+  
+  pending "should not be valid if mname is not one of the nameservers defined for the zone" do
+  end
+  
+  pending "should not be valid if it doesn't have atleast two NS-records" do
+  end
+  
+  pending "should not be valid if name server resource records are not unique" do
+  end
   
   it "should not be valid if SOA serial is not an unsigned 32 bit integer" do
-    check_int_on_zone(@valid_attributes, 'serial', [-1, 2**32], [1, 2**32-1])
+    check_int_on_obj_attr(Zone, @valid_attributes, 'serial', [-1, 2**32], [1, 2**32-1])
   end
 
-  it "should not be valid if SOA refresh value is not an unsigned 32 bit integer" do
-    check_int_on_zone(@valid_attributes, 'refresh', [-(2**31)-1, 2**31], [-(2**31), 2**31-1])
+  it "should not be valid if SOA refresh value is not a positive signed 32 bit integer" do
+    check_int_on_obj_attr(Zone, @valid_attributes, 'refresh', [-1, 2**31], [1, 2**31-1])
   end
 
-  it "should not be valid if SOA retry value is not an unsigned 32 bit integer" do
-    check_int_on_zone(@valid_attributes, 'retry', [-(2**31)-1, 2**31], [-(2**31), 2**31-1])
+  it "should not be valid if SOA retry value is not positive a signed 32 bit integer" do
+    check_int_on_obj_attr(Zone, @valid_attributes, 'retry', [-1, 2**31], [1, 2**31-1])
   end
 
-  it "should not be valid if SOA expire value is not an unsigned 32 bit integer" do
-    check_int_on_zone(@valid_attributes, 'expire', [-(2**31)-1, 2**31], [-(2**31), 2**31-1])
+  it "should not be valid if SOA expire value is not a positive nsigned 32 bit integer" do
+    check_int_on_obj_attr(Zone, @valid_attributes, 'expire', [-1, 2**31], [1, 2**31-1])
   end
   
   it "should not be valid if SOA minimum TTL is not an unsigned integer between 3600 and 10800" do
-    check_int_on_zone(@valid_attributes, 'minimum', [3599, 10801], [3600, 7200, 10800])
+    check_int_on_obj_attr(Zone, @valid_attributes, 'minimum', [3599, 10801], [3600, 7200, 10800])
   end
 end
 
