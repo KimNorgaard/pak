@@ -7,6 +7,8 @@ en:
       models:
         zone:
           attributes:
+            base:
+              missing_ns_record: "A zone must have at least two NS resource records"
             name:
               blank: "Zone origin not provided"
             mname:

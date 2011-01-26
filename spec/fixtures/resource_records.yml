@@ -4,3 +4,17 @@ www.test.com:
     resource_record_type: a
     zone: test.com
     ttl: 3600
+
+ns1.bar.com:
+    name: "ns1.bar.com"
+    rdata: "192.168.0.1"
+    resource_record_type: ns
+    zone: test.com
+    ttl: 3600
+
+ns2.bar.com:
+    name: "ns2.bar.com"
+    rdata: "192.168.0.2"
+    resource_record_type: ns
+    zone: test.com
+    ttl: 3600

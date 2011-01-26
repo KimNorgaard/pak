@@ -10,7 +10,9 @@ gem 'mysql2'
 
 group :test do
   gem 'rspec-rails', '>= 2.0.0.beta.10'
+  gem 'factory_girl_rails'
 end
+
 
 # Use unicorn as the web server
 # gem 'unicorn'

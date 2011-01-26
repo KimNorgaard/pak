@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe ResourceRecord, "that is new" do
   include SpecHelperMethods
-  fixtures :zones
-  fixtures :resource_record_types
-
+  #fixtures :zones
+  #fixtures :resource_record_types
+  #fixtures :resource_records
+  
   before(:each) do
     @valid_attributes = {
       :name                 => 'www.test.com',

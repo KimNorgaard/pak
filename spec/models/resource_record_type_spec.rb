@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ResourceRecordType, "that is new" do
-  fixtures :resource_record_types
+  #fixtures :resource_record_types
   before(:each) do
     @valid_attributes = {
       :name           => 'TEST',

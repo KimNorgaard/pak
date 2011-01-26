@@ -2,6 +2,16 @@ class Zone < ActiveRecord::Base
   belongs_to :zone_type
   has_many   :resource_records, :dependent => :destroy
   
+  SUPPORTED_RR_TYPES = %w(
+    A      AAAA   AFSDB  CERT   CNAME  DNSKEY DS     HINFO  KEY
+    LOC    MX     NAPTR  NS     NSEC   PTR    RP     RRSIG  SPF
+    SSHFP  SRV    TXT
+  )
+  
+  SUPPORTED_RR_TYPES.each do |rr_type|
+    has_many "#{rr_type.downcase}_resource_records".to_sym, :class_name => rr_type
+  end
+    
   # Attributes that are required
   validates :name,      :presence => true,
                         :uniqueness => true
@@ -14,11 +24,11 @@ class Zone < ActiveRecord::Base
   validates :minimum,   :presence => true
   validates :zone_type, :presence => true
   validates :master,    :presence => true,
-                        :if => 'zone_type.name == "SLAVE"'
+                        :if => 'zone_type && zone_type.name == "SLAVE"'
 
   # Master must be a valid IP address
   validates :master,    :ip => true,
-                        :unless => 'zone_type.name == "SLAVE"',
+                        :unless => 'zone_type && zone_type.name == "SLAVE"',
                         :allow_nil => true
   
   # RFC 1035, 3.3.13: SOA serial that must be a 32 bit unsigned integer
@@ -45,6 +55,7 @@ class Zone < ActiveRecord::Base
   validates :name,  :domainname => true, :allow_blank => true
   validates :mname, :hostname => { :allow_underscore => true }, :allow_blank => true
   validates :rname, :fqdn => true, :allow_blank => true
+  validates_with ZoneValidator
 
   # Clear empty attributes before saving
   before_save :clear_empty_attrs
