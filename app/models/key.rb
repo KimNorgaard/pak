@@ -1,0 +1,2 @@
+class KEY < ResourceRecord
+end

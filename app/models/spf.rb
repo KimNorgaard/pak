@@ -1,0 +1,2 @@
+class SPF < ResourceRecord
+end

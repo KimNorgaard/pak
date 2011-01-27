@@ -1,0 +1,2 @@
+class CERT < ResourceRecord
+end

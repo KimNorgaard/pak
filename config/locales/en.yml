@@ -9,10 +9,12 @@ en:
           attributes:
             base:
               missing_ns_record: "A zone must have at least two NS resource records"
+              duplicate_nameservers_found: "Duplicate nameservers found"
             name:
               blank: "Zone origin not provided"
             mname:
               blank: "Zone primary name server not provided"
+              not_a_defined_nameserver: "Zone mname was not found in Zone's NS records"
             rname:
               blank: "Zone mailbox not provided"
             serial:

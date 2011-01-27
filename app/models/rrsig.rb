@@ -1,0 +1,2 @@
+class RRSIG < ResourceRecord
+end

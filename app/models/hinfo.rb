@@ -1,0 +1,2 @@
+class HINFO < ResourceRecord
+end

@@ -1,0 +1,2 @@
+class CNAME < ResourceRecord
+end

@@ -1,14 +1,13 @@
 class ResourceRecord < ActiveRecord::Base
   belongs_to :zone
   belongs_to :resource_record_type
-
-  validates_associated :zone
   
   # Attributes that are required
   validates :name, :presence => true
   validates :rdata, :presence => true
   validates :resource_record_type, :presence => true
   validates :ttl, :presence => true
+  validates :zone, :presence => true
   
   # RFC 2181, 8: It is hereby specified that a TTL value is an unsigned number,
   # with a minimum value of 0, and a maximum value of 2147483647. That is, a
@@ -39,9 +38,9 @@ class ResourceRecord < ActiveRecord::Base
     end
 
     # get ttl from zone
-    unless self.zone_id.nil?
+    unless self.zone.nil?
       append_zone_name!
-      self.ttl ||= self.zone.ttl
+      self.ttl ||= self.zone.minimum
     end  
   end
 

@@ -1,0 +1,2 @@
+class SRV < ResourceRecord
+end

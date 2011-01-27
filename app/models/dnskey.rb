@@ -1,0 +1,2 @@
+class DNSKEY < ResourceRecord
+end

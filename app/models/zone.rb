@@ -7,9 +7,12 @@ class Zone < ActiveRecord::Base
     LOC    MX     NAPTR  NS     NSEC   PTR    RP     RRSIG  SPF
     SSHFP  SRV    TXT
   )
+
+  validates_associated :resource_records
   
   SUPPORTED_RR_TYPES.each do |rr_type|
     has_many "#{rr_type.downcase}_resource_records".to_sym, :class_name => rr_type
+    validates_associated "#{rr_type.downcase}_resource_records".to_sym
   end
     
   # Attributes that are required
@@ -35,19 +38,22 @@ class Zone < ActiveRecord::Base
   validates_numericality_of :serial,
     :greater_than_or_equal_to => 0,
     :less_than => 2**32,
-    :allow_blank => true
+    :allow_blank => true,
+    :if => :strict_validations
   
   # RFC 1035, 3.3.13: SOA refresh, retry, expire, minimum must be 32 bit signed integers
   #                   but we cheat, since negative timings does not make sense
   validates :refresh, :retry, :expire, :numericality => {
     :greater_than_or_equal_to => 0,
-    :less_than => 2**31
+    :less_than => 2**31,
+    :if => :strict_validations
   }
   
   # RFC 2308, 5: SOA minimum should be between one and three hours
   validates :minimum, :numericality => {
     :greater_than_or_equal_to => 3600,
-    :less_than_or_equal_to    => 10800
+    :less_than_or_equal_to    => 10800,
+    :if => :strict_validations
   }
 
   # Custom zone validation
@@ -55,11 +61,46 @@ class Zone < ActiveRecord::Base
   validates :name,  :domainname => true, :allow_blank => true
   validates :mname, :hostname => { :allow_underscore => true }, :allow_blank => true
   validates :rname, :fqdn => true, :allow_blank => true
-  validates_with ZoneValidator
+  validates_with ZoneValidator, :if => :strict_validations
 
   # Clear empty attributes before saving
   before_save :clear_empty_attrs
 
+  attr_accessor :strict_validations
+  attr_accessor :force_active
+  
+  def self.active=(state)
+    if state
+      if self.force_active
+        @active = true
+      else
+        self.strict_validations = true
+        @active = self.valid?
+      end
+    else
+      @active = false
+    end
+  end
+
+  def activate!
+    self.active = true
+    save! if self.active?  
+  end
+
+  def deactivate!
+    self.active = false
+    save!
+  end
+
+  def save
+    self.strict_validations = self.active?
+    super
+  end
+  
+  def save!
+    self.strict_validations = self.active?
+    super
+  end
   
   private
   

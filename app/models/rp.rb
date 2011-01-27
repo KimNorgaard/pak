@@ -1,0 +1,2 @@
+class RP < ResourceRecord
+end

@@ -1,0 +1,2 @@
+class PTR < ResourceRecord
+end

@@ -1,0 +1,2 @@
+class LOC < ResourceRecord
+end

@@ -1,0 +1,2 @@
+class NAPTR < ResourceRecord
+end

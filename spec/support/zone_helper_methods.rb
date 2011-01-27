@@ -11,6 +11,11 @@ module SpecHelperMethods
     end
   end
 
+  def new_a_record(zone)
+    a_rr_type = ResourceRecordType.find(:first, :conditions => { :name => "A" })
+    Factory.build(:a, :resource_record_type => a_rr_type, :zone => zone)
+  end
+
   def new_ns_record(name, rdata)
     ns_rr_type = ResourceRecordType.find(:first, :conditions => { :name => "NS" })
     Factory.build(:ns, :name => "#{name}", :rdata => "#{rdata}", :resource_record_type => ns_rr_type)
@@ -19,9 +24,11 @@ module SpecHelperMethods
   def new_valid_zone
     zone=Factory.build(:zone)
     zone.zone_type = ZoneType.find(:first, :conditions => { :name => "NATIVE" })
-    ns1 = new_ns_record("ns1.bar.com", "192.168.0.1")
-    ns2 = new_ns_record("ns2.bar.com", "192.168.0.2")
+    zone.save!
+    ns1 = new_ns_record(zone.name, "ns1.bar.com")
+    ns2 = new_ns_record(zone.name, "ns2.bar.com")
     zone.ns_resource_records << [ns1, ns2]
+    zone.strict_validations = true
     zone
   end
 end

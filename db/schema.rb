@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(:version => 20110113173330) do
     t.integer  "retry",        :default => 3600,   :null => false
     t.integer  "expire",       :default => 604800, :null => false
     t.integer  "minimum",      :default => 3600,   :null => false
-    t.boolean  "active",       :default => true,   :null => false
+    t.boolean  "active",       :default => false,   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "zone_type_id", :default => 1,      :null => false

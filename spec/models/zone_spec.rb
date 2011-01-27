@@ -1,7 +1,8 @@
 require 'spec_helper'
+include SpecHelperMethods
 
 describe Zone, "that is new" do
-  include SpecHelperMethods
+  #include SpecHelperMethods
 
   before(:each) do
   end
@@ -9,6 +10,13 @@ describe Zone, "that is new" do
   it "should create a new instance given valid attributes" do
     zone=new_valid_zone
     zone.save!
+  end
+  
+  it "should activate a new instance given valid attributes" do
+    zone=new_valid_zone
+    zone.activate!
+    zone.should be_valid
+    zone.active?.should be_true
   end
   
   it "should not be valid if the zone already exists" do
@@ -25,11 +33,11 @@ describe Zone, "that is new" do
     zone.should have(1).errors_on(:name)
   end
 
-  it "should not be valid without a name server" do
+  it "should not be valid without a nameserver" do
     zone=new_valid_zone
     zone.mname = nil
     zone.should_not be_valid
-    zone.should have(1).errors_on(:mname)
+    zone.should have(2).errors_on(:mname)
   end
 
   it "should not be valid without a mailbox" do
@@ -94,18 +102,14 @@ describe Zone, "that is new" do
     zone=new_valid_zone
     zone.mname = '*invalid*'
     zone.should_not be_valid
-    zone.should have(1).errors_on(:mname)
-    zone.mname = '_ns1.test.com'
-    zone.should be_valid
+    zone.should have(2).errors_on(:mname)
   end  
 
   it "should not be valid if mname is the zone name" do
     zone=new_valid_zone
     zone.mname = zone.name
     zone.should_not be_valid
-    zone.should have(1).errors_on(:mname)
-    zone.mname = "#{zone.name}.otherzone.com"
-    zone.should be_valid
+    zone.should have(2).errors_on(:mname)
   end
   
   it "should not be valid if it doesn't have atleast two valid NS-records" do
@@ -113,17 +117,27 @@ describe Zone, "that is new" do
     zone.ns_resource_records.delete_all
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_ns_record("ns1.bar.com", "192.168.0.1")
+    zone.ns_resource_records << new_ns_record(zone.name, "ns1.bar.com")
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_ns_record("ns2.bar.com", "192.168.0.2")
+    zone.ns_resource_records << new_ns_record(zone.name, "ns2.bar.com")
     zone.should be_valid
   end
 
-  pending "should not be valid if mname is not one of the nameservers defined for the zone" do
+  it "should not be valid if mname is not one of the nameservers defined for the zone" do
+    zone=new_valid_zone
+    zone.mname = "ns1.foo.com"
+    zone.should_not be_valid
+    zone.should have(1).errors_on(:mname)
   end
   
-  pending "should not be valid if name server resource records are not unique" do
+  it "should not be valid if name server resource records are not unique" do
+    zone=new_valid_zone
+    ns_rr = zone.ns_resource_records.first.dup
+    ns_rr.id = nil
+    zone.ns_resource_records << ns_rr
+    zone.should_not be_valid
+    zone.should have(1).errors_on(:base)
   end
   
   it "should not be valid if SOA serial is not an unsigned 32 bit integer" do
@@ -148,29 +162,23 @@ describe Zone, "that is new" do
 end
 
 describe Zone, "that exists" do
-  fixtures :zones
-  fixtures :zone_types
-  
   it "should have a collection of zones" do
+    zone=new_valid_zone
+    zone.save!
     Zone.find(:all).should_not be_empty
   end
 
-  it "should have three records" do
-    Zone.should have(3).records
-  end
-
   it "should find an existing zone" do
-    zone = Zone.find(zones("test.com".to_sym).id)
-    zone.should eql(zones("test.com".to_sym))
+    zone = new_valid_zone
+    zone.save!
+    zone2 = Zone.find(zone.id)
+    zone2.should eql(zone)
   end
 end
 
 describe Zone, "with Zone Types" do
-  fixtures :zone_types
-  fixtures :zones
-  
   it "should have a zone type" do
-    zone = Zone.find(zones("test.com".to_sym).id)
+    zone = new_valid_zone
     zone.zone_type.should_not be_nil
   end
 end

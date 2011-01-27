@@ -1,0 +1,2 @@
+class NSEC < ResourceRecord
+end
