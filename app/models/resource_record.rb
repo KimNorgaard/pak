@@ -16,9 +16,16 @@ class ResourceRecord < ActiveRecord::Base
     :greater_than_or_equal_to => 0,
     :less_than => 2**31
   }, :allow_blank => true
-  
-  # If we are called as one of the resource type sub-classes we only return that subset of resource records
-  # e.g. Zone.find_by_id(1).ns_resource_records.find(:all)  # => only the NS resources are returned
+
+  before_validation do
+    set_resource_record_type_from_class_name!
+    append_zone_name! unless self.zone.nil?
+    set_ttl_from_zone_minimum! unless self.zone.nil?
+  end
+
+  # If ResourceRecord is called as one of the resource type children then only return
+  # that subset of resource records.
+  # Example: NS.find(:all)  # => only the NS resources are returned
   def self.find(*args)
     my_class_name = self.name
     if my_class_name != "ResourceRecord"
@@ -31,23 +38,21 @@ class ResourceRecord < ActiveRecord::Base
     end  
   end
 
-  def before_validation #:nodoc:
-    unless self.class.name == "ResourceRecord"
-      # set the resource type from the class name
-      self.resource_record_type_id = ResourceRecordType.find(:first, :conditions => { :name => self.class.name }).id
+private
+  # set the resource type from the class name
+  def set_resource_record_type_from_class_name! #:nodoc:
+    if self.class.name != "ResourceRecord" and self.resource_record_type.nil?
+      self.resource_record_type = ResourceRecordType.find(:first, :conditions => { :name => self.class.name })
     end
-
-    # get ttl from zone
-    unless self.zone.nil?
-      append_zone_name!
-      self.ttl ||= self.zone.minimum
-    end  
+  end
+  
+  # set ttl from zone minimum ttl
+  def set_ttl_from_zone_minimum! #:nodoc:
+    self.ttl ||= self.zone.minimum
   end
 
-private
-
   # Append the domain name to the +name+ field if missing
-  def append_zone_name!
+  def append_zone_name! #:nodoc:
     self[:name] = self.zone.name if self[:name].blank?
 
     unless (self[:name] =~ /\.#{self.zone.name}$/ or self[:name] == self.zone.name)

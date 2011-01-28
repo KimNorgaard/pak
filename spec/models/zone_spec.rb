@@ -2,8 +2,6 @@ require 'spec_helper'
 include SpecHelperMethods
 
 describe Zone, "that is new" do
-  #include SpecHelperMethods
-
   before(:each) do
   end
 

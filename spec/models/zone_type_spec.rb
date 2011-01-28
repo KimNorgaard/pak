@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ZoneType, "that is new" do
-  fixtures :zone_types
   before(:each) do
     @valid_attributes = {
       :name => 'TEST'
@@ -24,5 +23,4 @@ describe ZoneType, "that is new" do
     zone_type.should_not be_valid
     zone_type.should have(1).errors_on(:name)
   end
-
 end

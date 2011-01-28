@@ -6,7 +6,7 @@
 #   cities = City.create({{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-zone_types = ZoneType.create([{ :name => 'NATIVE'}, {:name => 'MASTER'}, {:name => 'SLAVE'}, {:name => 'SUPERSLAVE'}])
+zone_types = ZoneType.create!([{ :name => 'NATIVE'}, {:name => 'MASTER'}, {:name => 'SLAVE'}, {:name => 'SUPERSLAVE'}])
 
 RR_TYPES = [
   {:name => 'A'},
@@ -32,4 +32,4 @@ RR_TYPES = [
   {:name => 'TXT'}
 ]
 
-ResourceRecordType.create(RR_TYPES)
+ResourceRecordType.create!(RR_TYPES)

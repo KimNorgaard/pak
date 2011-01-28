@@ -1,18 +1,14 @@
 class Zone < ActiveRecord::Base
   belongs_to :zone_type
-  has_many   :resource_records, :dependent => :destroy
+  has_many :resource_records, :dependent => :destroy
   
-  SUPPORTED_RR_TYPES = %w(
-    A      AAAA   AFSDB  CERT   CNAME  DNSKEY DS     HINFO  KEY
-    LOC    MX     NAPTR  NS     NSEC   PTR    RP     RRSIG  SPF
-    SSHFP  SRV    TXT
-  )
-
   validates_associated :resource_records
   
-  SUPPORTED_RR_TYPES.each do |rr_type|
-    has_many "#{rr_type.downcase}_resource_records".to_sym, :class_name => rr_type
-    validates_associated "#{rr_type.downcase}_resource_records".to_sym
+  ResourceRecordType.find(:all).each do |rr_type|
+    has_many "#{rr_type.name.downcase}_resource_records".to_sym,
+      :class_name => rr_type.name.upcase,
+      :conditions => "resource_record_type_id = #{rr_type.id}"
+    validates_associated "#{rr_type.name.downcase}_resource_records".to_sym
   end
     
   # Attributes that are required
