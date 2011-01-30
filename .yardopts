@@ -1,0 +1,1 @@
+--main README.rdoc --title PAK --private --protected app/**/*.rb vendor/plugins/**/*.rb README.rdoc lib/**/*.rb
