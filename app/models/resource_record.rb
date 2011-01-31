@@ -8,7 +8,7 @@ class ResourceRecord < ActiveRecord::Base
   validates :resource_record_type, :presence => true
   validates :ttl, :presence => true
   validates :zone, :presence => true
-  
+
   # RFC 2181, 8: It is hereby specified that a TTL value is an unsigned number,
   # with a minimum value of 0, and a maximum value of 2147483647. That is, a
   # maximum of 2^31 - 1.
@@ -36,6 +36,12 @@ class ResourceRecord < ActiveRecord::Base
     else 
       super(*args)
     end  
+  end
+  
+  # check if the resource record needs the priority attribute
+  # @return [Boolean] True if the resource record needs the priority attribute
+  def needs_priority?
+    self.resource_record_type.needs_priority if self.resource_record_type  
   end
 
 private
