@@ -1,10 +1,10 @@
 # = Location Record (LOC)
 #
-# A LOC record (RFC 1876) is a means for expressing geographic location information for a domain name.
+# Stores GPS data. Experimental - widely used.
 #
-# @see http://tools.ietf.org/html/rfc1876
+# @see http://www.ietf.org/rfc/rfc1876.txt
 class LOC < ResourceRecord
-  validates :name, :hostname => true
+  validates :name, :hostname => { :allow_underscore => true }
   # RFC 1876, section 3
   validates :rdata, :format => /^
     \d{1,2}(?:[ ]\d{1,2}(?:[ ][0-9]*\.?[0-9]+))?[ ](N|S)[ ]

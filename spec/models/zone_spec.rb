@@ -115,10 +115,10 @@ describe Zone, "that is new" do
     zone.ns_resource_records.delete_all
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_ns_record(zone.name, "ns1.bar.com")
+    zone.ns_resource_records << new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_ns_record(zone.name, "ns2.bar.com")
+    zone.ns_resource_records << new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
     zone.should be_valid
   end
 

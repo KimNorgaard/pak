@@ -65,7 +65,56 @@ Factory.define :naptr, :class => "NAPTR" do |rr|
   rr.ttl 3600
 end
 
+Factory.define :nsec, :class => "NSEC" do |rr|
+  rr.sequence(:name) {|n| "nsec-test#{n}"}
+  rr.rdata 'foo.com. A MX RRSIG NSEC TYPE1234'
+  rr.ttl 3600
+end
+
 Factory.define :ns, :class =>"NS" do |rr|
+  rr.ttl 3600
+end
+
+Factory.define :ptr, :class => "PTR" do |rr|
+  rr.sequence(:name) {|n| "#{n}"}
+  rr.sequence(:rdata) {|n| "www#{n}.foo.com"}
+  rr.ttl 3600
+end
+
+Factory.define :rp, :class => "RP" do |rr|
+  rr.sequence(:name) {|n| "rp-test#{n}"}
+  rr.rdata "john.doe.foo.com jd.people.foo.com"
+  rr.ttl 3600
+end
+
+Factory.define :rrsig, :class => "RRSIG" do |rr|
+  rr.sequence(:name) {|n| "rrsig-test#{n}"}
+  rr.rdata "A 5 3 86400 20030322173103 20030220173103 2642 example.com. oJB1W6WNGv+="
+  rr.ttl 3600
+end
+
+Factory.define :spf, :class => "SPF" do |rr|
+  rr.sequence(:name) {|n| "spf-test#{n}"}
+  rr.rdata "v=spf1 a -all"
+  rr.ttl 3600
+end
+
+Factory.define :srv, :class => "SRV" do |rr|
+  rr.sequence(:name) {|n| "_ldap._tcp.srv-test#{n}"}
+  rr.rdata "0 80 ldap.host.com"
+  rr.priority 10
+  rr.ttl 3600
+end
+
+Factory.define :sshfp, :class => "SSHFP" do |rr|
+  rr.sequence(:name) {|n| "sshfp-test#{n}"}
+  rr.rdata "1 2 123456789abcdef67890123456789abcdef67890"
+  rr.ttl 3600
+end
+
+Factory.define :txt, :class => "TXT" do |rr|
+  rr.sequence(:name) {|n| "txt-test#{n}"}
+  rr.rdata "a very pretty text"
   rr.ttl 3600
 end
 

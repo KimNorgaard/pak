@@ -1,8 +1,8 @@
 # = Location of AFS servers (AFSDB)
 #
-# The AFSDB DNS resource record is used to specify DCE or AFS DBserver hosts.
+# Location of AFS servers. Experimental - special apps only.
 #
-# @see http://tools.ietf.org/html/rfc1183
+# @see http://www.ietf.org/rfc/rfc1183.txt
 class AFSDB < ResourceRecord
   validates :name, :hostname => { :allow_underscore => true }
   validates :rdata, :format => /^\d+ [\w_.]+$/
