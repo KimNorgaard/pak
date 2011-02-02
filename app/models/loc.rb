@@ -4,7 +4,7 @@
 #
 # @see http://www.ietf.org/rfc/rfc1876.txt
 class LOC < ResourceRecord
-  validates :name, :hostname => { :allow_underscore => true }
+  validates :name, :hostname => { :allow_underscore => true, :allow_wildcard_hostname => true }
   # RFC 1876, section 3
   validates :rdata, :format => /^
     \d{1,2}(?:[ ]\d{1,2}(?:[ ][0-9]*\.?[0-9]+))?[ ](N|S)[ ]

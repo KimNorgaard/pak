@@ -6,5 +6,5 @@
 #
 # @see http://www.ietf.org/rfc/rfc4398.txt
 class CERT < ResourceRecord
-  validates :name, :hostname =>  { :allow_underscore => true }
+  validates :name, :hostname =>  { :allow_underscore => true, :allow_wildcard_hostname => true }
 end

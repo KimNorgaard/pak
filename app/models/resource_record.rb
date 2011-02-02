@@ -19,49 +19,55 @@ class ResourceRecord < ActiveRecord::Base
 
   before_validation do
     set_resource_record_type_from_class_name!
-    append_zone_name! unless self.zone.nil?
-    set_ttl_from_zone_minimum! unless self.zone.nil?
+    set_ttl_from_zone_minimum!
+    append_zone_name!
   end
 
   # If ResourceRecord is called as one of the resource type children then only return
   # that subset of resource records.
   # Example: NS.find(:all)  # => only the NS resources are returned
   def self.find(*args)
-    my_class_name = self.name
-    if my_class_name != "ResourceRecord"
-      rr_type_id_from_class_name = ResourceRecordType.find(:first, :conditions => { :name => my_class_name }).id
+    if self.name != "ResourceRecord"
+      rr_type_id_from_class_name = ResourceRecordType.find(:first, :conditions => { :name => self.name }).id
       with_scope(:find => { :conditions => "resource_record_type_id = #{rr_type_id_from_class_name}" }) do
         super(*args)
       end  
     else 
       super(*args)
-    end  
+    end
   end
   
-  # check if the resource record needs the priority attribute
+  # Check if the resource record needs the priority attribute
   # @return [Boolean] True if the resource record needs the priority attribute
   def needs_priority?
     self.resource_record_type.needs_priority if self.resource_record_type  
   end
 
+  # Check if the rr has a wildcard name
+  # @return [Boolean] True if the resource record has a wildcard name
+  def is_wildcard?
+    return false if self.name.nil?
+    self.name.split('.').first == '*'
+  end
+
 private
-  # set the resource type from the class name
-  def set_resource_record_type_from_class_name! #:nodoc:
-    if self.class.name != "ResourceRecord" and self.resource_record_type.nil?
-      self.resource_record_type = ResourceRecordType.find(:first, :conditions => { :name => self.class.name })
-    end
+  # Set the resource type from the class name
+  def set_resource_record_type_from_class_name!
+    return if self.class.name == "ResourceRecord"
+    self.resource_record_type ||= ResourceRecordType.find(:first, :conditions => { :name => self.class.name })
   end
   
-  # set ttl from zone minimum ttl
-  def set_ttl_from_zone_minimum! #:nodoc:
+  # Set ttl from zone minimum ttl
+  def set_ttl_from_zone_minimum!
+    return if self.zone.nil?
     self.ttl ||= self.zone.minimum
   end
 
-  # Append the domain name to the +name+ field if missing
-  def append_zone_name! #:nodoc:
-    self[:name] = self.zone.name if self[:name].blank?
-
-    unless (self[:name] =~ /\.#{self.zone.name}$/ or self[:name] == self.zone.name)
+  # Append the zone name to the name field if missing
+  def append_zone_name!
+    return if self.zone.nil?
+    self[:name] = self.zone.name if self[:name].blank? or self[:name] == "@"
+    unless (self[:name] =~ /\.#{Regexp.escape(self.zone.name || "")}$/ or self[:name] == self.zone.name)
       self[:name] << ".#{self.zone.name}"
     end  
   end

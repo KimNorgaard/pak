@@ -4,7 +4,7 @@
 #
 # @see http://www.ietf.org/rfc/rfc1183.txt
 class RP < ResourceRecord
-  validates :name, :hostname => { :allow_underscore => true }
+  validates :name, :hostname => { :allow_underscore => true, :allow_wildcard_hostname => true }
   # RFC 1183, section 2.2
   validates :rdata, :format => /^\S+ \S+$/
 end

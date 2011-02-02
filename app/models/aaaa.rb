@@ -6,6 +6,6 @@
 # @see http://www.ietf.org/rfc/rfc3596.txt
 # @see http://www.zytrax.com/books/dns/ch8/aaaa.html
 class AAAA < ResourceRecord
-  validates :name, :hostname => { :allow_underscore => true }
+  validates :name, :hostname => { :allow_underscore => true, :allow_wildcard_hostname => true }
   validates :rdata, :ip => { :ip_type => :v6 }
 end

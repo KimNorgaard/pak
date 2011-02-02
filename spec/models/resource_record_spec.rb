@@ -38,7 +38,14 @@ describe ResourceRecord, "that is new" do
   it "should not be valid if ttl is not an unsigned 32 bit integer" do
     check_int_on_obj_attr(@rr, 'ttl', [-1, 2**31], [0, 1, 2**31-1])
   end
-
+  
+  it "should accept valid wildcard names" do
+    @rr.name = "*"
+    @rr.should be_valid
+    @rr.name = "*.*"
+    @rr.name = "www.*d"
+    @rr.should_not be_valid
+  end
 end
 
 describe ResourceRecord, "with Resource Record Types" do

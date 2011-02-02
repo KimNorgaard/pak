@@ -4,6 +4,6 @@
 #
 # @see http://www.ietf.org/rfc/rfc1183.txt
 class AFSDB < ResourceRecord
-  validates :name, :hostname => { :allow_underscore => true }
+  validates :name, :hostname => { :allow_underscore => true, :allow_wildcard_hostname => true }
   validates :rdata, :format => /^\d+ [\w_.]+$/
 end
