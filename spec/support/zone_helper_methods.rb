@@ -14,11 +14,11 @@ module SpecHelperMethods
   def new_record(rr_type_name, options = {})
     rr_type = ResourceRecordType.find(:first, :conditions => { :name => rr_type_name.upcase })
     options[:resource_record_type] = rr_type
-    Factory.build(rr_type.name.downcase.to_sym, options)
+    FactoryGirl.build(rr_type.name.downcase.to_sym, options)
   end
   
   def new_valid_zone
-    zone=Factory.build(:zone)
+    zone=FactoryGirl.build(:zone)
     zone.zone_type = ZoneType.find(:first, :conditions => { :name => "NATIVE" })
     zone.save!
     ns1 = new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")

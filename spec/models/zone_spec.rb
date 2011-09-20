@@ -20,7 +20,7 @@ describe Zone, "that is new" do
   it "should not be valid if the zone already exists" do
     zone=new_valid_zone
     zone.save!
-    zone2=zone.clone
+    zone2=zone.dup
     zone2.should_not be_valid
   end
   
