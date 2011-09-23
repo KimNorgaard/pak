@@ -56,14 +56,6 @@ describe ResourceRecord, "with Resource Record Types" do
     zone.save!
   end
   
-  it "should have a related resource record type" do
-    rr2=ResourceRecord.find(@rr.id)
-    rr2.resource_record_type.should_not be_nil
-    rr2.should be_valid
-    rr2.resource_record_type = nil
-    rr2.should_not be_valid
-  end
-
   it "should have a related zone" do
     rr2=ResourceRecord.find(@rr.id)
     rr2.zone.should_not be_nil
