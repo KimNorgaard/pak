@@ -84,11 +84,11 @@ class Zone < ActiveRecord::Base
   public
 
     def active=(state)
-      self.active = state
+      super
 
-      if self.active? and !self.force_active
-        self.strict_validations = true
-        self.active = self.valid?
+      if self[:active] and !@force_active
+        @strict_validations = true
+        self[:active] = self.valid?
       end
     end
 
@@ -110,7 +110,7 @@ class Zone < ActiveRecord::Base
     end
 
     def set_strict_validation_if_active
-      @strict_validations = active?
+      @strict_validations = active? unless @force_active
     end
 
 end
