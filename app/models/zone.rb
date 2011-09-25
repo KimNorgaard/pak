@@ -4,8 +4,11 @@ class Zone < ActiveRecord::Base
   attr_accessor :strict_validations
   attr_accessor :force_active
 
-  before_save do
+  before_validation do
     set_strict_validation_if_active
+  end
+
+  before_save do
     clear_empty_attrs
   end
   
@@ -106,11 +109,13 @@ class Zone < ActiveRecord::Base
   private
 
     def clear_empty_attrs
-      self.master = nil if self.master and self.master.empty?
+      self[:master] = nil if self.master and self.master.empty?
+      true
     end
 
     def set_strict_validation_if_active
-      @strict_validations = active? unless @force_active
+      self[:strict_validations] = active? unless @force_active
+      true
     end
 
 end

@@ -14,6 +14,8 @@ class MX < ResourceRecord
     :numericality => { :greater_than_or_equal_to => 0 , :less_than_or_equal_to => 65535, :only_integer => true },
     :presence => true
 
+  public
 
-  def needs_priority?; false; end
+    def needs_priority?; true; end
+
 end
