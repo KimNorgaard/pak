@@ -12,6 +12,7 @@ class CreateZones < ActiveRecord::Migration
       t.integer :expire,    :null => false, :default => 604800
       t.integer :minimum,   :null => false, :default => 3600
       t.boolean :active,    :null => false, :default => 0
+      t.boolean :strict_validation, :null => false, :default => 1
 
       t.timestamps
     end

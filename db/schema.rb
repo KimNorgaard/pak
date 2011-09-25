@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20110113172627) do
     t.integer  "expire",       :default => 604800, :null => false
     t.integer  "minimum",      :default => 3600,   :null => false
     t.boolean  "active",       :default => false,  :null => false
+    t.boolean  "strict_validation",       :default => true, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

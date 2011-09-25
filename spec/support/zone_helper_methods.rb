@@ -18,6 +18,7 @@ module SpecHelperMethods
   
   def new_valid_zone
     zone=FactoryGirl.build(:zone)
+    zone.strict_validation = false
     zone.save!
     ns1 = new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
     ns2 = new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
