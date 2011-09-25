@@ -21,10 +21,8 @@ class ResourceRecord < ActiveRecord::Base
   
   public
 
-    # @return [Boolean] True for RRs that need the priority attribute
     def needs_priority?; false; end
 
-    # @return [Boolean] True for RRs that have wildcard names
     def is_wildcard?
       return false if self.name.nil?
       self.name.split('.').first == '*'
@@ -33,31 +31,24 @@ class ResourceRecord < ActiveRecord::Base
 
   private
 
-    def append_origin!
-      self[:name] << ".#{self.zone.name}"
+    def append_zone_name!
+      self.name << ".#{zone.name}"
     end
 
-    def origin_prepends_name?
-      self[:name] =~ /\.#{Regexp.escape(self.zone.name || "")}$/
+    def use_zone_name!
+      self.name = zone.name
     end
 
     def prepare_name!
-      return if self.zone.nil?
+      return if zone.nil? or zone.name.blank?
 
-      if self[:name].blank? or self[:name] == "@"
-        use_origin!
-      elsif !origin_prepends_name? and self[:name] != self.zone.name
-        append_origin!
-      end
+      use_zone_name! if name.blank? or name == '@'
+      append_zone_name! unless name.index(zone.name)
     end
   
     def set_ttl_from_zone_minimum!
       return if self.zone.nil?
       self.ttl ||= self.zone.minimum
-    end
-
-    def use_origin!
-      self[:name] = self.zone.name
     end
 
 end

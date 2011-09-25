@@ -20,7 +20,7 @@ class Zone < ActiveRecord::Base
   validates :mname, :rname, :serial, :refresh, :retry, :expire, :minimum, :type, :presence => true
   validates :name, :presence => true, :uniqueness => true
   validates :master, :presence => true, :if => :slave?
-  validates :master, :ip => true, :unless => :slave?, :allow_nil => true
+  validates :master, :ip => true, :if => :slave?, :allow_nil => true
   validates :type, :inclusion => { :in => @@types, :message => "Unknown zone type" }
 
   # RFC 952, RFC 1123, RFC 2181

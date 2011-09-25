@@ -55,6 +55,7 @@ describe Zone, "that is new" do
   
   it "should not be valid if master is not a valid ip address" do
     zone=new_valid_zone
+    zone.type="SLAVE"
     zone.master="foo"
     zone.should_not be_valid
     zone.should have(1).errors_on(:master)
