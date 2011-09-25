@@ -13,18 +13,11 @@ class ResourceRecord < ActiveRecord::Base
     prepare_name!
   end
   
-  validates :name, :rdata, :type, :ttl, :zone,
-            :presence => true
-
-  validates_inclusion_of :type,
-                         :in => @@types,
-                         :message => "Unknown RR type"
+  validates :name, :rdata, :type, :ttl, :zone, :presence => true
+  validates :type, :inclusion => {  :in => @@types, :message => "Unknown RR type" }
 
   # RFC 2181, 8
-  validates :ttl, :numericality => {
-    :greater_than_or_equal_to => 0,
-    :less_than => 2**31
-  }, :allow_blank => true
+  validates :ttl, :numericality => { :greater_than_or_equal_to => 0, :less_than => 2**31 }, :allow_blank => true
   
   public
 
