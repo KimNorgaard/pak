@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20110113172627) do
   create_table "resource_records", :force => true do |t|
     t.string   "name",                                      :null => false
     t.string   "rdata",                                     :null => false
-    t.string   "resource_record_type",                      :null => false
+    t.string   "type",                                      :null => false
     t.integer  "ttl"
     t.integer  "priority"
     t.boolean  "active",                  :default => true, :null => false
@@ -24,14 +24,14 @@ ActiveRecord::Schema.define(:version => 20110113172627) do
     t.integer  "zone_id",                                   :null => false
   end
 
-  add_index "resource_records", ["name", "resource_record_type"], :name => "index_resource_records_on_name_and_resource_record_type"
+  add_index "resource_records", ["name", "type"], :name => "index_resource_records_on_name_and_type"
   add_index "resource_records", ["name"], :name => "index_resource_records_on_name"
-  add_index "resource_records", ["resource_record_type"], :name => "index_resource_records_on_resource_record_type"
+  add_index "resource_records", ["type"], :name => "index_resource_records_on_type"
   add_index "resource_records", ["zone_id"], :name => "index_resource_records_on_zone_id"
 
   create_table "zones", :force => true do |t|
     t.string   "name",                             :null => false
-    t.string   "zone_type",  :default => "NATIVE", :null => false
+    t.string   "type",       :default => "NATIVE", :null => false
     t.string   "master"
     t.string   "mname",                            :null => false
     t.string   "rname",                            :null => false
@@ -46,6 +46,6 @@ ActiveRecord::Schema.define(:version => 20110113172627) do
   end
 
   add_index "zones", ["name"], :name => "index_zones_on_name"
-  add_index "zones", ["zone_type"], :name => "index_zones_on_zone_type"
+  add_index "zones", ["type"], :name => "index_zones_on_type"
 
 end

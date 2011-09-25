@@ -2,7 +2,7 @@ class CreateZones < ActiveRecord::Migration
   def self.up
     create_table :zones do |t|
       t.string  :name,      :null => false
-      t.string  :zone_type, :null => false, :default => 'NATIVE'
+      t.string  :type, :null => false, :default => 'NATIVE'
       t.string  :master,    :null => true
       t.string  :mname,     :null => false
       t.string  :rname,     :null => false
@@ -17,7 +17,7 @@ class CreateZones < ActiveRecord::Migration
     end
 
     add_index :zones, :name
-    add_index :zones, :zone_type
+    add_index :zones, :type
   end
 
   def self.down

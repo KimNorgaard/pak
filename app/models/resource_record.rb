@@ -1,24 +1,23 @@
 class ResourceRecord < ActiveRecord::Base
   belongs_to :zone
 
-  cattr_reader :resource_record_types
-  @@resource_record_types = [
+  cattr_reader :types
+  @@types = [
     'A',     'AAAA',  'AFSDB', 'CERT',  'CNAME', 'DNSKEY', 'DS',
     'HINFO', 'KEY',   'LOC',   'MX',    'NAPTR', 'NS',     'NSEC',
     'PTR',   'RP',    'RRSIG', 'SPF',   'SSHFP', 'SRV',    'TXT'
   ]
 
   before_validation do
-    set_resource_record_type_from_class_name!
     set_ttl_from_zone_minimum!
     prepare_name!
   end
   
-  validates :name, :rdata, :resource_record_type, :ttl, :zone,
+  validates :name, :rdata, :type, :ttl, :zone,
             :presence => true
 
-  validates_inclusion_of :resource_record_type,
-                         :in => @@resource_record_types,
+  validates_inclusion_of :type,
+                         :in => @@types,
                          :message => "Unknown RR type"
 
   # RFC 2181, 8
@@ -26,18 +25,6 @@ class ResourceRecord < ActiveRecord::Base
     :greater_than_or_equal_to => 0,
     :less_than => 2**31
   }, :allow_blank => true
-
-
-  # Support only searching for RRs of child class type
-  # Example: NS.find(:all)  # => only the NS resources are returned
-  def self.find(*args)
-    return super(*args) if self.name == "ResourceRecord"
-
-    condition = "resource_record_type = \"#{self.name}\""
-    with_scope(:find => {:conditions => "#{condition}" }) do
-      super(*args)
-    end  
-  end
   
   public
 
@@ -69,11 +56,6 @@ class ResourceRecord < ActiveRecord::Base
       elsif !origin_prepends_name? and self[:name] != self.zone.name
         append_origin!
       end
-    end
-
-    def set_resource_record_type_from_class_name!
-      return if self.class.name == "ResourceRecord"
-      self.resource_record_type ||= self.class.name
     end
   
     def set_ttl_from_zone_minimum!

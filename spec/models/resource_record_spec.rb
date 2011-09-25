@@ -4,7 +4,7 @@ include SpecHelperMethods
 describe ResourceRecord, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("A", :zone => zone)
+    @rr = new_record(A, :zone => zone)
   end
 
   it "should create a new instance given valid attributes" do
@@ -51,7 +51,7 @@ end
 describe ResourceRecord, "with Resource Record Types" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("A", :zone => zone)
+    @rr = new_record(A, :zone => zone)
     zone.a_resource_records << @rr
     zone.save!
   end
@@ -68,7 +68,7 @@ end
 describe A, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("A", :zone => zone)
+    @rr = new_record(A, :zone => zone)
   end
   
   it "should not be valid without a valid ipv4 address in rdata" do
@@ -88,7 +88,7 @@ end
 describe AAAA, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("AAAA", :zone => zone)
+    @rr = new_record(AAAA, :zone => zone)
   end
   
   it "should not be valid without a valid ipv6 address in rdata" do
@@ -108,7 +108,7 @@ end
 describe AFSDB, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("AFSDB", :zone => zone)
+    @rr = new_record(AFSDB, :zone => zone)
   end
   
   it "should not be valid without valid rdata" do
@@ -128,7 +128,7 @@ end
 describe CNAME, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("CNAME", :zone => zone)
+    @rr = new_record(CNAME, :zone => zone)
   end
   
   it "should not be valid if rdata is not a hostname" do
@@ -144,7 +144,7 @@ end
 describe DNSKEY, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("DNSKEY", :zone => zone)
+    @rr = new_record(DNSKEY, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid dnskey record" do
@@ -159,7 +159,7 @@ end
 describe DS, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("DS", :zone => zone)
+    @rr = new_record(DS, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid ds record" do
@@ -174,7 +174,7 @@ end
 describe HINFO, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("HINFO", :zone => zone)
+    @rr = new_record(HINFO, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid hinfo record" do
@@ -189,7 +189,7 @@ end
 describe KEY, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("KEY", :zone => zone)
+    @rr = new_record(KEY, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid key record" do
@@ -204,7 +204,7 @@ end
 describe LOC, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("LOC", :zone => zone)
+    @rr = new_record(LOC, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid key record" do
@@ -221,7 +221,7 @@ end
 describe MX, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("MX", :zone => zone)
+    @rr = new_record(MX, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid ip" do
@@ -262,7 +262,7 @@ end
 describe NAPTR, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("NAPTR", :zone => zone)
+    @rr = new_record(NAPTR, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid naptr record" do
@@ -279,7 +279,7 @@ end
 describe NS, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("NS", :zone => zone, :rdata => "ns3.bar.com")
+    @rr = new_record(NS, :zone => zone, :rdata => "ns3.bar.com")
   end
   
   it "should not be valid if rdata is not a valid hostname" do
@@ -294,7 +294,7 @@ end
 describe NSEC, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("NSEC", :zone => zone)
+    @rr = new_record(NSEC, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid nsec record" do
@@ -307,7 +307,7 @@ end
 describe PTR, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("PTR", :zone => zone)
+    @rr = new_record(PTR, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid hostname" do
@@ -320,7 +320,7 @@ end
 describe RP, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("RP", :zone => zone)
+    @rr = new_record(RP, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid rp record" do
@@ -335,7 +335,7 @@ end
 describe RRSIG, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("RRSIG", :zone => zone)
+    @rr = new_record(RRSIG, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid rrsig record" do
@@ -352,7 +352,7 @@ end
 describe SPF, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("SPF", :zone => zone)
+    @rr = new_record(SPF, :zone => zone)
   end
   
   it "should not be valid if rdata exceeds 255 characters" do
@@ -365,7 +365,7 @@ end
 describe SRV, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("SRV", :zone => zone)
+    @rr = new_record(SRV, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid srv record" do
@@ -392,7 +392,7 @@ end
 describe SSHFP, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("SSHFP", :zone => zone)
+    @rr = new_record(SSHFP, :zone => zone)
   end
   
   it "should not be valid if rdata is not a valid sshfp record" do
@@ -409,7 +409,7 @@ end
 describe TXT, "that is new" do
   before(:each) do
     zone = new_valid_zone
-    @rr = new_record("TXT", :zone => zone)
+    @rr = new_record(TXT, :zone => zone)
   end
   
   it "should not be valid if rdata exceeds 255 characters" do

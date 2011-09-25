@@ -11,18 +11,18 @@ module SpecHelperMethods
     end
   end
 
+
   def new_record(rr_type, options = {})
-    options[:resource_record_type] = rr_type
-    FactoryGirl.build(rr_type.downcase.to_sym, options)
+    FactoryGirl.build(rr_type.name.downcase.to_sym, options)
   end
   
   def new_valid_zone
     zone=FactoryGirl.build(:zone)
     zone.save!
-    ns1 = new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
-    ns2 = new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
+    ns1 = new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
+    ns2 = new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
     zone.ns_resource_records << [ns1, ns2]
-    zone.strict_validations = true
+    zone.strict_validation = true
     zone
   end
 end

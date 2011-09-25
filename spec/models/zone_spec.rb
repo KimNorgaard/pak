@@ -48,7 +48,7 @@ describe Zone, "that is new" do
   it "should not be valid if zone type is SLAVE but does not have a master set" do
     zone=new_valid_zone
     zone.master = nil
-    zone.zone_type = "SLAVE"
+    zone.type = "SLAVE"
     zone.should_not be_valid
     zone.should have(1).errors_on(:master)
   end
@@ -115,10 +115,10 @@ describe Zone, "that is new" do
     zone.ns_resource_records.destroy_all
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
+    zone.ns_resource_records << new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns1.bar.com")
     zone.should_not be_valid
     zone.should have(1).errors_on(:base)
-    zone.ns_resource_records << new_record("NS", :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
+    zone.ns_resource_records << new_record(NS, :zone => zone, :name => zone.name, :rdata => "ns2.bar.com")
     zone.should be_valid
   end
 
@@ -177,6 +177,6 @@ end
 describe Zone, "with Zone Types" do
   it "should have a zone type" do
     zone = new_valid_zone
-    zone.zone_type.should_not be_nil
+    zone.type.should_not be_nil
   end
 end

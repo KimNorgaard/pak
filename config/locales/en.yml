@@ -27,7 +27,7 @@ en:
               blank: "Zone expire value not provided"
             minimum:
               blank: "Zone minimum TTL value not provided"
-            zone_type:
+            type:
               blank: "Zone type not provided"
             master:
               blank: "Zone master not provided, but zone type is SLAVE"

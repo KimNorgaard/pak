@@ -1,23 +1,24 @@
 class Zone < ActiveRecord::Base
   has_many :resource_records, :dependent => :destroy
 
-  attr_accessor :strict_validations
+  set_inheritance_column "sti_disabled"
+  
+  cattr_reader  :zone_types
+  @@zone_types = ['NATIVE', 'MASTER', 'SLAVE', 'SUPERSLAVE']
+  
+  attr_accessor :strict_validation
   attr_accessor :force_active
 
-  before_validation do
-    set_strict_validation_if_active
-  end
+  before_validation :set_strict_validation_if_active
 
-  before_save do
-    clear_empty_attrs
-  end
-  
+  before_save :clear_empty_attrs
+
+
   validates_associated :resource_records
-
-  ResourceRecord.resource_record_types.each do |rr_type|
+  ResourceRecord.types.each do |rr_type|
     has_many "#{rr_type.downcase}_resource_records".to_sym,
       :class_name => rr_type,
-      :conditions => "resource_record_type = \"#{rr_type}\""
+      :conditions => "type = \"#{rr_type}\""
     validates_associated "#{rr_type.downcase}_resource_records".to_sym
   end
     
@@ -29,16 +30,15 @@ class Zone < ActiveRecord::Base
   validates :retry,     :presence => true
   validates :expire,    :presence => true
   validates :minimum,   :presence => true
-  validates :zone_type, :presence => true
-  validates :master,    :presence => true,
-                        :if => 'zone_type && zone_type == "SLAVE"'
+  validates :type,      :presence => true
+  validates :master,    :presence => true, :if => :slave?
 
   validates :master,    :ip => true,
-                        :unless => 'zone_type && zone_type == "SLAVE"',
+                        :unless => :slave?,
                         :allow_nil => true
 
-  validates_inclusion_of :zone_type,
-                         :in => %w(NATIVE MASTER SLAVE SUPERSLAVE),
+  validates_inclusion_of :type,
+                         :in => @@zone_types,
                          :message => "Unknown zone type"
 
   
@@ -47,7 +47,7 @@ class Zone < ActiveRecord::Base
   validates_numericality_of :serial,
                             :greater_than_or_equal_to => 0,
                             :less_than => 2**32,
-                            :if => :strict_validations,
+                            :if => :strict_validation,
                             :allow_blank => true
   
   # RFC 1035, 3.3.13:
@@ -56,7 +56,7 @@ class Zone < ActiveRecord::Base
   validates :refresh, :retry, :expire, :numericality => {
     :greater_than_or_equal_to => 0,
     :less_than => 2**31,
-    :if => :strict_validations
+    :if => :strict_validation
   }
   
   # RFC 2308, 5:
@@ -64,7 +64,7 @@ class Zone < ActiveRecord::Base
   validates :minimum, :numericality => {
     :greater_than_or_equal_to => 3600,
     :less_than_or_equal_to    => 10800,
-    :if => :strict_validations
+    :if => :strict_validation
   }
 
   # RFC 952, RFC 1123, RFC 2181
@@ -81,7 +81,7 @@ class Zone < ActiveRecord::Base
             :fqdn => true,
             :allow_blank => true
 
-  validates_with ZoneValidator, :if => :strict_validations
+  validates_with ZoneValidator, :if => :strict_validation
 
 
   public
@@ -89,15 +89,15 @@ class Zone < ActiveRecord::Base
     def active=(state)
       super
 
-      if self[:active] and !@force_active
-        @strict_validations = true
-        self[:active] = self.valid?
+      if self[:active] and @force_active == false
+        @strict_validation = true
+        self[:active] = valid?
       end
     end
 
     def activate!
       self.active = true
-      save! if self.active?  
+      save! if active?  
     end
 
     def deactivate!
@@ -105,16 +105,19 @@ class Zone < ActiveRecord::Base
       save!
     end
 
+    def slave?
+      self.type == "SLAVE"
+    end
 
   private
 
     def clear_empty_attrs
-      self[:master] = nil if self.master and self.master.empty?
+      self.master = nil if master and master.empty?
       true
     end
 
     def set_strict_validation_if_active
-      self[:strict_validations] = active? unless @force_active
+      @strict_validation = active? if active? and @force_active == false
       true
     end
 
