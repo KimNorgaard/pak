@@ -1,0 +1,55 @@
+Roles:
+ - admin
+   - manage users
+ - super-hostmaster
+   - manage zones
+   - manage records
+   - manage templates
+   - read zone history
+   - read record history
+   - manage ad hoc users
+ - hostmaster
+   - manage zone data and records on zones that he is hostmaster on
+   - read history on zones that he is hostmaster on
+   - read audit trail on zones that he is hostmaster on
+   - manage ad hoc users
+ - ad hoc user
+   - manage zone data and records that the token permits access to
+
+
+see information about a zone
+see information about many zones
+
+create a zone
+create a zone using template
+batch create many zones
+batch create many zones using template
+
+update zone information on a zone
+update zone information on many zones
+
+delete a zone
+delete many zones
+
+activate a zone
+inactivate a zone
+
+create a resource record on a zone
+update a resource record on a zone
+delete a resource record on a zone
+inactivate a resource record on a zone
+
+create an A records with PTR record if we own the reverse zone
+create an AAAA records with PTR record if we own the reverse zone
+
+search for zones
+search for record content on one, many, or all fields
+
+see an audit trail for all destructive actions
+see previous versoins of zones and resource records
+
+gems:
+- history: vestal_versions / paper_trail
+- audit: acts_as_audited
+- authentication: devise + devise_ldap_authenticatable
+- authorization: CanCan
