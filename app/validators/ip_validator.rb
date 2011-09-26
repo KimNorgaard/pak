@@ -14,18 +14,18 @@ class IpValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     case options[:ip_type]
       when :v4
-        record.errors.add(attribute, options[:message] || :ipv4) unless is_ipv4?(value)
+        record.errors.add(attribute, options[:message] || :ipv4) unless ipv4?(value)
       when :v6
-        record.errors.add(attribute, options[:message] || :ipv6) unless is_ipv6?(value)
+        record.errors.add(attribute, options[:message] || :ipv6) unless ipv6?(value)
       else
-        record.errors.add(attribute, options[:message] || :ip) unless is_ip?(value)
+        record.errors.add(attribute, options[:message] || :ip) unless ip?(value)
       end
   end
 private
   # Validates IPv4 address
   # @param [String] address the ipv4 address
   # @return [Boolean] the validation result
-  def is_ipv4?(address)
+  def ipv4?(address)
     address =~ /^
       (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
       (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
@@ -35,7 +35,7 @@ private
   # Validates IPv6 address
   # @param [String] address the ipv6 address
   # @return [Boolean] the validation result
-  def is_ipv6?(address)
+  def ipv6?(address)
     address =~ /^
       (
          (([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})
@@ -56,7 +56,7 @@ private
   # Validates IP (v4 or v6) address
   # @param [String] address the ip address
   # @return [Boolean] the validation result
-  def is_ip?(address)
-    is_ipv4?(address) || is_ipv6?(address)
+  def ip?(address)
+    ipv4?(address) || ipv6?(address)
   end
 end
